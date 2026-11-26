@@ -13,6 +13,11 @@ Chaque utilisateur masque les menus qui ne l'intéressent pas, pour alléger son
 - `ir.ui.menu._visible_menu_ids` : résultat d'Odoo (en cache par groupes) filtré par utilisateur ; contexte `is_tous_les_menus` pour la page.
 - Client action `is_menu_utilisateur.mes_menus`, entrée `user_menuitems`.
 
+## Descriptions
+
+- Info-bulle au survol de chaque ligne : `ir.ui.menu.is_description`, sinon docstring du modèle (classe d'un module `is_*`), sinon libellé du modèle.
+- Crayon ✎ pour le groupe « Rédiger les descriptions des menus » (catégorie Utilisabilité) : saisie sous la ligne, bouton « Reprendre le texte par défaut ».
+
 ## À venir
 
-- Descriptions des menus (✎, info-bulle), statistiques (nombre, dernière modification).
+- Statistiques (nombre d'enregistrements, dernière modification, calcul de nuit).
