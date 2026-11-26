@@ -1,0 +1,36 @@
+.is_mes_menus {
+    padding: 16px 24px;
+    background-color: $o-view-background-color;
+
+    .is_mes_menus_recherche {
+        max-width: 280px;
+    }
+
+    .is_mes_menus_ligne {
+        padding-top: 3px;
+        padding-bottom: 3px;
+        border-bottom: 1px solid $gray-200;
+
+        &:hover {
+            background-color: $gray-100;
+        }
+
+        &.is_racine .is_mes_menus_nom {
+            font-weight: bold;
+        }
+
+        &.is_grise .is_mes_menus_nom {
+            opacity: 0.45;
+        }
+    }
+
+    .is_mes_menus_fleche,
+    .is_mes_menus_nom {
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .is_mes_menus_fleche {
+        width: 20px;
+    }
+}
