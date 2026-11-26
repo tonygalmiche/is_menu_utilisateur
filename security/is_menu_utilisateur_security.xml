@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Référents qui rédigent les descriptions des menus (crayon dans « Mes menus ») -->
+    <record id="group_rediger_descriptions" model="res.groups">
+        <field name="name">Rédiger les descriptions des menus</field>
+        <field name="category_id" ref="base.module_category_usability"/>
+    </record>
+</odoo>

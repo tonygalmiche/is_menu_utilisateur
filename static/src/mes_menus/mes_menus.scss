@@ -1,6 +1,16 @@
 .is_mes_menus {
-    padding: 16px 24px;
     background-color: $o-view-background-color;
+
+    // En-tête fixe (titre, boutons, recherche) ; seule la liste défile (.o_content), avec son ascenseur
+    .is_mes_menus_haut {
+        flex: 0 0 auto;
+        padding: 16px 24px 12px;
+        border-bottom: 1px solid $gray-300;
+    }
+
+    .is_mes_menus_arbre {
+        padding: 8px 24px 16px;
+    }
 
     .is_mes_menus_recherche {
         max-width: 280px;
@@ -28,6 +38,38 @@
     .is_mes_menus_nom {
         cursor: pointer;
         user-select: none;
+    }
+
+    .is_mes_menus_info {
+        color: $gray-400;
+    }
+
+    .is_mes_menus_crayon {
+        cursor: pointer;
+        color: $gray-400;
+        visibility: hidden;
+
+        &:hover {
+            color: $o-brand-primary;
+        }
+    }
+
+    .is_mes_menus_ligne:hover .is_mes_menus_crayon {
+        visibility: visible;
+    }
+
+    .is_mes_menus_edition {
+        max-width: 600px;
+        padding: 8px 0 12px;
+    }
+
+    .is_mes_menus_ouvrir .fa-search {
+        cursor: pointer;
+        color: $gray-500;
+
+        &:hover {
+            color: $o-brand-primary;
+        }
     }
 
     .is_mes_menus_fleche {

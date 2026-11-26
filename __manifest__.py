@@ -2,7 +2,7 @@
 
 {
     "name": "InfoSaône - Menus par utilisateur",
-    "version": "16.0.1.0.0",
+    "version": "16.0.1.1.0",
     "author": "InfoSaône / Tony Galmiche",
     "category": "InfoSaône",
     "description": """
@@ -12,6 +12,9 @@ InfoSaône - Menus par utilisateur
   menus autorisés à l'utilisateur, une case à cocher par menu.
 - Menu décoché : masqué dans la barre de menus pour cet utilisateur seulement
   (sous-menus compris). Simple confort d'affichage, pas de sécurité.
+- Description de chaque menu en info-bulle : description personnalisée, sinon
+  docstring du modèle (modules is_*), sinon libellé du modèle. Saisie par le
+  groupe « Rédiger les descriptions des menus » (crayon).
 """,
     "maintainer": "InfoSaône",
     "website": "http://www.infosaone.com",
@@ -19,7 +22,9 @@ InfoSaône - Menus par utilisateur
         "base",
         "web",
     ],
-    "data": [],
+    "data": [
+        "security/is_menu_utilisateur_security.xml",
+    ],
     "assets": {
         "web.assets_backend": [
             "is_menu_utilisateur/static/src/user_menu_item.js",

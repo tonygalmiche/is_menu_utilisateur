@@ -2,32 +2,61 @@
 <templates xml:space="preserve">
 
     <t t-name="is_menu_utilisateur.MesMenus" owl="1">
-        <div class="o_action is_mes_menus h-100 overflow-auto">
-            <div class="is_mes_menus_entete d-flex flex-wrap align-items-center gap-2 mb-2">
-                <h2 class="me-3 mb-0">Mes menus</h2>
-                <button class="btn btn-secondary btn-sm" t-on-click="toutPlier">Tout plier</button>
-                <button class="btn btn-secondary btn-sm" t-on-click="toutDeplier">Tout déplier</button>
-                <input type="search" class="form-control form-control-sm is_mes_menus_recherche"
-                       placeholder="🔍 Rechercher un menu" t-model="state.recherche"/>
+        <div class="o_action is_mes_menus">
+            <div class="is_mes_menus_haut">
+                <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                    <h2 class="me-3 mb-0">Mes menus</h2>
+                    <button class="btn btn-secondary btn-sm" t-on-click="toutPlier">Tout plier</button>
+                    <button class="btn btn-secondary btn-sm" t-on-click="toutDeplier">Tout déplier</button>
+                    <input type="search" class="form-control form-control-sm is_mes_menus_recherche"
+                           placeholder="🔍 Rechercher un menu" t-model="state.recherche"/>
+                </div>
+                <p class="text-muted mb-0">
+                    Décochez un menu pour ne plus l'afficher dans la barre de menus (ses sous-menus sont masqués aussi).
+                </p>
             </div>
-            <p class="text-muted mb-3">
-                Décochez un menu pour ne plus l'afficher dans la barre de menus (ses sous-menus sont masqués aussi).
-            </p>
-            <div class="is_mes_menus_arbre">
+            <div class="o_content is_mes_menus_arbre">
                 <t t-foreach="lignes" t-as="ligne" t-key="ligne.noeud.id">
-                    <div class="is_mes_menus_ligne d-flex align-items-center"
-                         t-att-class="{'is_grise': ligne.grise, 'is_racine': ligne.niveau === 0}"
-                         t-attf-style="padding-left: {{ ligne.niveau * 24 }}px;">
-                        <span class="is_mes_menus_fleche" t-on-click="() => this.basculerPli(ligne.noeud)">
-                            <i t-if="ligne.noeud.enfants.length"
-                               t-attf-class="fa fa-fw {{ ligne.ouvert ? 'fa-caret-down' : 'fa-caret-right' }}"/>
-                            <i t-else="" class="fa fa-fw"/>
-                        </span>
-                        <input type="checkbox" class="form-check-input me-2 mt-0"
-                               t-att-checked="!ligne.noeud.masque"
-                               t-on-change="() => this.basculerMasque(ligne.noeud)"/>
-                        <span class="is_mes_menus_nom" t-on-click="() => this.basculerPli(ligne.noeud)"
-                              t-esc="ligne.noeud.name"/>
+                    <div class="is_mes_menus_bloc">
+                        <div class="is_mes_menus_ligne d-flex align-items-center"
+                             t-att-class="{'is_grise': ligne.grise, 'is_racine': ligne.niveau === 0}"
+                             t-att-title="descriptionAffichee(ligne.noeud)"
+                             t-attf-style="padding-left: {{ ligne.niveau * 24 }}px;">
+                            <span class="is_mes_menus_fleche" t-on-click="() => this.basculerPli(ligne.noeud)">
+                                <i t-if="ligne.noeud.enfants.length"
+                                   t-attf-class="fa fa-fw {{ ligne.ouvert ? 'fa-caret-down' : 'fa-caret-right' }}"/>
+                                <i t-else="" class="fa fa-fw"/>
+                            </span>
+                            <input type="checkbox" class="form-check-input me-2 mt-0"
+                                   t-att-checked="!ligne.noeud.masque"
+                                   t-on-change="() => this.basculerMasque(ligne.noeud)"/>
+                            <span class="is_mes_menus_ouvrir me-1">
+                                <i t-if="ligne.noeud.action_id" class="fa fa-fw fa-search" title="Ouvrir ce menu"
+                                   t-on-click="() => this.ouvrirMenu(ligne.noeud)"/>
+                                <i t-else="" class="fa fa-fw"/>
+                            </span>
+                            <span class="is_mes_menus_nom" t-on-click="() => this.basculerPli(ligne.noeud)"
+                                  t-esc="ligne.noeud.name"/>
+                            <i t-if="descriptionAffichee(ligne.noeud)" class="fa fa-info-circle is_mes_menus_info ms-2"/>
+                            <i t-if="state.peutRediger" class="fa fa-pencil is_mes_menus_crayon ms-2"
+                               title="Rédiger la description"
+                               t-on-click="() => this.editerDescription(ligne.noeud)"/>
+                        </div>
+                        <div t-if="state.edition and state.edition.id === ligne.noeud.id"
+                             class="is_mes_menus_edition"
+                             t-attf-style="margin-left: {{ ligne.niveau * 24 + 64 }}px;">
+                            <textarea class="form-control form-control-sm mb-2" rows="3"
+                                      t-att-placeholder="ligne.noeud.description_defaut"
+                                      t-model="state.edition.texte"/>
+                            <div class="d-flex flex-wrap gap-2">
+                                <button class="btn btn-primary btn-sm"
+                                        t-on-click="() => this.enregistrerDescription(ligne.noeud)">Enregistrer</button>
+                                <button class="btn btn-secondary btn-sm"
+                                        t-on-click="() => this.annulerDescription()">Annuler</button>
+                                <button t-if="ligne.noeud.description_defaut" class="btn btn-link btn-sm"
+                                        t-on-click="() => this.reprendreDescriptionDefaut(ligne.noeud)">Reprendre le texte par défaut</button>
+                            </div>
+                        </div>
                     </div>
                 </t>
             </div>

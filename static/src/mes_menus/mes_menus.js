@@ -15,16 +15,21 @@ export class MesMenus extends Component {
     setup() {
         this.orm = useService("orm");
         this.menuService = useService("menu");
+        this.actionService = useService("action");
         this.state = useState({
             racines: [],
             ouverts: {},
             recherche: "",
+            peutRediger: false,
+            edition: null, // { id, texte } : description en cours de saisie
         });
         onWillStart(() => this.charger());
     }
 
     async charger() {
-        const lignes = await this.orm.call("ir.ui.menu", "is_get_mes_menus", []);
+        const resultat = await this.orm.call("ir.ui.menu", "is_get_mes_menus", []);
+        const lignes = resultat.menus;
+        this.state.peutRediger = resultat.peut_rediger;
         const parId = {};
         for (const ligne of lignes) {
             parId[ligne.id] = { ...ligne, enfants: [] };
@@ -94,6 +99,41 @@ export class MesMenus extends Component {
         };
         parcourir(this.state.racines);
         this.state.ouverts = ouverts;
+    }
+
+    /** Description affichée en info-bulle : personnalisée, sinon par défaut. */
+    descriptionAffichee(noeud) {
+        return noeud.description || noeud.description_defaut || "";
+    }
+
+    editerDescription(noeud) {
+        this.state.edition = { id: noeud.id, texte: noeud.description || "" };
+    }
+
+    reprendreDescriptionDefaut(noeud) {
+        this.state.edition.texte = noeud.description_defaut || "";
+    }
+
+    annulerDescription() {
+        this.state.edition = null;
+    }
+
+    async enregistrerDescription(noeud) {
+        const texte = this.state.edition.texte.trim();
+        await this.orm.call("ir.ui.menu", "is_set_description", [noeud.id, texte]);
+        noeud.description = texte;
+        this.state.edition = null;
+    }
+
+    /** Ouvre le menu (même masqué : il n'est alors plus dans la barre de menus). */
+    async ouvrirMenu(noeud) {
+        if (!noeud.action_id) {
+            return;
+        }
+        await this.actionService.doAction(noeud.action_id, { clearBreadcrumbs: true });
+        if (this.menuService.getMenu(noeud.id)) {
+            this.menuService.setCurrentMenu(noeud.id);
+        }
     }
 
     async basculerMasque(noeud) {
